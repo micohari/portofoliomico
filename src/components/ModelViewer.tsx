@@ -5,8 +5,9 @@ import * as THREE from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-export type ModelFormat = "stl" | "obj" | "fbx";
+export type ModelFormat = "stl" | "obj" | "fbx" | "glb" | "gltf";
 
 interface ModelProps {
   url: string;
@@ -50,9 +51,15 @@ function FbxModel({ url }: { url: string }) {
   return <primitive object={scene} />;
 }
 
+function GlbModel({ url }: { url: string }) {
+  const gltf = useLoader(GLTFLoader, url);
+  return <primitive object={gltf.scene} />;
+}
+
 function ModelInner({ url, format }: ModelProps) {
   if (format === "stl") return <StlModel url={url} />;
   if (format === "fbx") return <FbxModel url={url} />;
+  if (format === "glb" || format === "gltf") return <GlbModel url={url} />;
   return <ObjModel url={url} />;
 }
 
