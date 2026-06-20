@@ -1,0 +1,7 @@
+name = "portomico"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "./dist/client"
+
+[vars]
+VITE_SUPABASE_URL = "https://ztfgybgbdicixanzklky.supabase.co/rest/v1/"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0Zmd5YmdiZGljaXhhbnprbGt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTAwMjUsImV4cCI6MjA5NzM4NjAyNX0.pkkp8vmrGYY0vV8I4QMbY__HlMuxLvcHIei2FMZx98Q"
