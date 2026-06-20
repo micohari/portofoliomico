@@ -1144,18 +1144,51 @@ function Projects() {
   const PROJECTS_DATA: Project[] = useMemo(
     () =>
       ctx.projects.length
-        ? ctx.projects.map((p) => ({
-            category: p.category as ProjectCategory,
-            tag: p.tag,
-            title: p.title,
-            description: p.description,
-            highlights: p.highlights ?? [],
-            stack: p.stack ?? [],
-            previewImage: p.preview_image ?? undefined,
-            gallery: p.gallery ?? undefined,
-            embedUrl: p.embed_url ?? undefined,
-            externalUrl: p.external_url ?? undefined,
-          }))
+        ? ctx.projects.map((p) => {
+            // Helper to match DB image field or title with static imported assets
+            let resolvedImage: string | undefined = p.preview_image ?? undefined;
+            
+            // Check if we need a fallback for empty or placeholder image
+            if (!resolvedImage || resolvedImage === "placeholder.png" || !resolvedImage.startsWith("http")) {
+              const imgStr = (p.preview_image || "").toLowerCase();
+              const t = p.title.toLowerCase();
+              
+              if (imgStr.includes("ekarcis") || t.includes("e-karcis") || t.includes("ekarcis")) {
+                resolvedImage = projectEkarcis;
+              } else if (imgStr.includes("laporku") || t.includes("laporku")) {
+                resolvedImage = projectLaporku;
+              } else if (imgStr.includes("poldapedia") || t.includes("poldapedia")) {
+                resolvedImage = projectPoldapedia;
+              } else if (imgStr.includes("beritapoldaterkini") || t.includes("berita polda") || t.includes("polda")) {
+                resolvedImage = projectBeritaPolda;
+              } else if (imgStr.includes("journal") || t.includes("journal")) {
+                resolvedImage = projectJournalsTerkini;
+              } else if (imgStr.includes("jejak") || t.includes("jejak")) {
+                resolvedImage = projectJejakBeritaku;
+              } else if (imgStr.includes("peteng") || imgStr.includes("liputan") || t.includes("liputan") || t.includes("peteng")) {
+                resolvedImage = projectLiputanPeteng;
+              } else if (imgStr.includes("absensi") || t.includes("absensi")) {
+                resolvedImage = projectAbsensiJanti1;
+              } else if (imgStr.includes("sdn-janti") || imgStr.includes("sdnjanti") || t.includes("sdn janti") || t.includes("janti 1")) {
+                resolvedImage = projectSdnJanti1;
+              } else if (imgStr.includes("ad-implementation") || t.includes("active directory") || t.includes("ad implementation")) {
+                resolvedImage = projectAdImplementation;
+              }
+            }
+
+            return {
+              category: p.category as ProjectCategory,
+              tag: p.tag,
+              title: p.title,
+              description: p.description,
+              highlights: p.highlights ?? [],
+              stack: p.stack ?? [],
+              previewImage: resolvedImage,
+              gallery: p.gallery ?? undefined,
+              embedUrl: p.embed_url ?? undefined,
+              externalUrl: p.external_url ?? undefined,
+            };
+          })
         : PROJECTS,
     [ctx.projects],
   );
