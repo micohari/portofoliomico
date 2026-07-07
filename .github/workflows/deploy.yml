@@ -24,15 +24,21 @@ jobs:
       - name: Build (TanStack Start + Nitro Cloudflare preset)
         run: bun run build
         env:
-          # Public Vite env vars used at build time. Add more VITE_* as needed.
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
 
+      # Step tambahan untuk melihat lokasi asli file wrangler.json jika nanti masih error
+      - name: Debug Output Directory
+        run: |
+          echo "=== Cek isi folder .output ==="
+          ls -R .output || echo "Folder .output tidak ditemukan"
+          echo "=== Cek isi folder dist ==="
+          ls -R dist || echo "Folder dist tidak ditemukan"
+
+      # Di sini kita ubah path config-nya dari dist/server ke .output/server
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # Nitro emits a ready-to-deploy worker bundle + wrangler.json in dist/server.
-          # --name overrides the auto-generated worker name so the URL becomes portomico.<subdomain>.workers.dev
-          command: deploy --config dist/server/wrangler.json --name portomico
+          command: deploy --config .output/server/wrangler.json --name portomico
